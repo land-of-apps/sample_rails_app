@@ -36,3 +36,7 @@
 
 # Ignore db test files.
 db/test.*
+
+
+# Ignore AppMap archives and working files
+/.appmap
