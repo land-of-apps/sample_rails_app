@@ -1,0 +1,38 @@
+name: appmap-analysis
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      # Install AppMap library and tools
+      - name: Enable appmap gem update
+        run: bundle config unset deployment      
+      - name: Install AppMap tools
+        id: install-appmap
+        uses: getappmap/install-action@v1
+        with:
+          project-type: bundler # Choose the type of your project here:
+                        # bundler, maven, gradle, pip, pipenv, poetry,
+                        # yarn, npm, etc.
+ 
+      ####################################################################
+      # Put the commands required to run your application test suite.
+      # For example, create and setup the test database, commands 
+      # to run your test suite.
+      - name: Run tests
+        run: bundle exec rails test
+
+      - name: Archive AppMaps
+        uses: getappmap/archive-action@v1
+        with:
+          revision: ${{ github.event.pull_request.base.sha }}
