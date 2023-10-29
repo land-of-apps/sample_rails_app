@@ -49,7 +49,7 @@ jobs:
         if: inputs.bootstrap || ( github.event_name != 'pull_request' )
         uses: getappmap/archive-action@v1
         with:
-          revision: github.event.pull_request.base.sha || github.sha 
+          revision: ${{ github.event.pull_request.base.sha || github.sha }}
           directory: ${{ inputs.directory }}
 
       - name: Analyze AppMaps
