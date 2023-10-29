@@ -52,6 +52,10 @@ jobs:
           revision: ${{ github.event.pull_request.base.sha || github.sha }}
           directory: ${{ inputs.directory }}
 
+      - name: Remove archive info file
+        if: inputs.bootstrap
+        run: rm ${{ inputs.directory }}/tmp/appmap/appmap_archive.json
+
       - name: Analyze AppMaps
         uses: getappmap/analyze-action@v1
         if: github.event_name == 'pull_request'
