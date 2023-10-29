@@ -1,4 +1,4 @@
-name: appmap-analysis
+name: Main
 
 on:
   pull_request:
