@@ -51,7 +51,7 @@ jobs:
   appmap-analysis:
     if: always()
     needs: [ test ]
-    uses: ./.github/workflows/appmap-analysis.yml
+    uses: getappmap/analyze-action/.github/workflows/appmap-analysis.yml@feat/bootstrap-option
     with:
       bootstrap: true
     permissions:
