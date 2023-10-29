@@ -3,6 +3,11 @@ name: Main
 on:
   pull_request:
 
+permissions:
+  # Commit the AppMap configuration.
+  # If the EndBug/add-and-commit is removed, this can be changed to 'read'.
+  contents: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -30,3 +35,22 @@ jobs:
 
       - name: Run tests
         run: bundle exec rails test
+
+      - name: Save AppMaps
+        uses: actions/cache/save@v3
+        if: always()
+        with:
+          path: ./tmp/appmap
+          key: appmaps-${{ github.sha }}-${{ github.run_attempt }}
+
+  appmap-analysis:
+    if: always()
+    needs: [test]
+    uses: ./.github/workflows/appmap-analysis.yml
+    with:
+      bootstrap: true
+    permissions:
+      actions: read
+      contents: read
+      checks: write
+      pull-requests: write
