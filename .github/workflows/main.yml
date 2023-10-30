@@ -1,10 +1,13 @@
-Your updated workflow should look like this:
-
 ```yaml
 name: Main
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
+  schedule:
+    - cron: '0 0 * * 0'
 
 permissions:
   contents: write
@@ -42,5 +45,3 @@ jobs:
       - name: Run tests
         run: bundle exec rails test
 ```
-
-The AppMap CI language agent installation steps have been added before the "Run tests" step.
