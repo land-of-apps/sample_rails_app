@@ -33,9 +33,3 @@ jobs:
 
       - name: Run tests
         run: bundle exec rails test
-
-      - name: Archive AppMaps
-        id: appmap-bootstrap-archive-appmaps
-        uses: getappmap/archive-action@v1
-        with:
-          revision: ${{ github.event.pull_request.base.sha }}
