@@ -1,4 +1,3 @@
-```yaml
 name: Main
 
 on:
@@ -52,4 +51,3 @@ jobs:
         with:
           revision: ${{ github.event.pull_request.base.sha }}
 # End AppMap bootstrap archive step
-```
