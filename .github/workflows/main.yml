@@ -43,7 +43,17 @@ jobs:
       - name: Run tests
         run: bundle exec rails test
 
-      # Insert snippet here
+      # Inserted snippet
+      - name: AppMap Analysis
+        if: always()
+        needs: [test]
+        uses: getappmap/analyze-action/.github/workflows/appmap-analysis.yml@v1
+        permissions:
+          actions: read
+          contents: read
+          checks: write
+          pull-requests: write
+
       - name: Save AppMaps
         uses: actions/cache/save@v3
         if: always()
