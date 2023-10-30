@@ -23,7 +23,7 @@ jobs:
         run: bundle exec rails test
 
       - name: Save AppMaps
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         if: always()
         with:
           path: ./tmp/appmap
