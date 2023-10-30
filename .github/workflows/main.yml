@@ -47,7 +47,10 @@ jobs:
       - name: AppMap Analysis
         if: always()
         needs: [test]
-        uses: getappmap/analyze-action/.github/workflows/appmap-analysis.yml@v1
+        # TODO: This workflow URL is temporary while 'bootstrap' option is being tested.
+        uses: getappmap/analyze-action/.github/workflows/appmap-analysis.yml@feat/bootstrap-option
+        with:
+          bootstrap: true
         permissions:
           actions: read
           contents: read
