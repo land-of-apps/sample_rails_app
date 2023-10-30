@@ -2,11 +2,6 @@ name: Main
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
-  schedule:
-    - cron: '0 0 * * 0'
 
 permissions:
   contents: write
@@ -22,41 +17,5 @@ jobs:
         with:
           bundler-cache: true
 
-      # Begin AppMap CI language agent installation.
-      # This snippet can be safely removed once the AppMap language agent has been 
-      # added to the project dependencies, and appmap.yml has been created.
-      - name: Enable appmap gem update
-        run: bundle config unset deployment
-      - name: Install AppMap tools
-        id: install-appmap
-        uses: getappmap/install-action@v1
-        with:
-          project-type: bundler
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v9
-        with:
-          message: "chore: Add AppMap language agent and appmap.yml"
-      # End AppMap CI language agent installation
-
       - name: Run tests
         run: bundle exec rails test
-
-      - name: Save AppMaps
-        uses: actions/cache/save@v3
-        if: always()
-        with:
-          path: ./tmp/appmap
-          key: appmaps-${{ github.sha }}-${{ github.run_attempt }}
-
-  appmap-analysis:
-    if: always()
-    needs: [ test ]
-    # TODO: This workflow URL is temporary while the bootstrap option is being tested.
-    uses: getappmap/analyze-action/.github/workflows/appmap-analysis.yml@feat/bootstrap-option
-    with:
-      bootstrap: true
-    permissions:
-      actions: read
-      contents: read
-      checks: write
-      pull-requests: write
