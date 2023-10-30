@@ -47,3 +47,13 @@ jobs:
         with:
           path: ./tmp/appmap
           key: appmaps-${{ github.sha }}-${{ github.run_attempt }}
+
+  appmap-analysis:
+    if: always()
+    needs: [ test ]
+    uses: ./.github/workflows/appmap-analysis.yml
+    permissions:
+      actions: read
+      contents: read
+      checks: write
+      pull-requests: write
