@@ -42,3 +42,10 @@ jobs:
       
       - name: Run tests
         run: bundle exec rails test
+      
+      - name: Save AppMaps
+        uses: actions/cache/save@v3
+        if: always()
+        with:
+          path: ./tmp/appmap
+          key: appmaps-${{ github.sha }}-${{ github.run_attempt }}
