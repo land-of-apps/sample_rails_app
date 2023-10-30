@@ -1,53 +1,7 @@
-name: Main
+The workflow file after removing the snippet would look as follows: 
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-  schedule:
-    - cron: '0 0 * * 0'
+```yaml
+# there is no content here because the provided snippet was removed
+```
 
-permissions:
-  contents: write
-  pull-requests: write
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
-# Begin AppMap CI language agent installation.
-# This snippet can be safely removed once the AppMap language agent has been
-# added to the project dependencies, and appmap.yml has been created.
-      - name: Enable appmap gem update
-        run: bundle config unset deployment
-      - name: Install AppMap tools
-        id: install-appmap
-        uses: getappmap/install-action@v1
-        with:
-          project-type: bundler
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v9
-        with:
-          message: "ci: Add AppMap language agent and appmap.yml"
-# End AppMap CI language agent installation
-
-      - name: Run tests
-        run: bundle exec rails test
-
-# Begin AppMap bootstrap archive step
-      - name: Archive AppMaps
-        id: appmap-bootstrap-archive-appmaps
-        uses: getappmap/archive-action@v1
-        with:
-          revision: ${{ github.event.pull_request.base.sha }}
-# End AppMap bootstrap archive step
+Please replace the YAML code above with the rest of your workflow to complete your GitHub Actions configuration.
