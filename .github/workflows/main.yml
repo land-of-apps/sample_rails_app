@@ -22,19 +22,18 @@ jobs:
       - name: Run tests
         run: bundle exec rails test
 
-      - name: Save AppMaps
-        uses: actions/cache/save@v3
-        if: always()
+      - name: Install AppMap tools
+        id: install-appmap
+        uses: getappmap/install-action@v1
         with:
-          path: ./tmp/appmap
-          key: appmaps-${{ github.sha }}-${{ github.run_attempt }}
+          directory: ${{ inputs.directory }}
+          install-appmap-library: false
 
-  appmap-analysis:
-    if: always()
-    needs: [ test ]
-    uses: getappmap/analyze-action/.github/workflows/appmap-analysis.yml@v1
-    permissions:
-      actions: read
-      contents: read
-      checks: write
-      pull-requests: write
+      - name: Analyze AppMaps
+        uses: getappmap/analyze-action@fix/summary-report-source-link
+        if: github.event_name == 'pull_request'
+        with:
+          directory: ${{ inputs.directory }}
+          base-revision: ${{ github.event.pull_request.base.sha }}
+          head-revision: ${{ github.event.pull_request.head.sha }}
+          project-summary: true
