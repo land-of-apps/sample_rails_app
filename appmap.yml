@@ -1,6 +1,0 @@
-name: sample_rails_app
-packages:
-  - path: app
-  - path: lib
-language: ruby
-appmap_dir: tmp/appmap
