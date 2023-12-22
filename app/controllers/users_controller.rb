@@ -72,12 +72,14 @@ class UsersController < ApplicationController
     # Before filters
 
     # Confirms the correct user.
-    def correct_user
-      @user = User.find(params[:id])
-      if Time.now - @user.created_at > 24.hours
-        flash[:danger] = "You can only edit your profile within 24 hours of account creation."
-      end
+  def correct_user
+    @user = User.find(params[:id])
+    if Time.current - @user.created_at > 24.hours
+      flash[:danger] = "You can only edit your profile within 24 hours of account creation."
+      redirect_to(root_url, status: :see_other) and return
     end
+    redirect_to(root_url, status: :see_other) unless current_user?(@user) 
+  end
 
     # Confirms an admin user.
     def admin_user
