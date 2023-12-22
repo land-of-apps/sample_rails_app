@@ -38,6 +38,23 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_url
   end
 
+  test "should not allow the user to edit profile after 24 hours of account creation" do
+    @user.update(created_at: 2.days.ago)
+    log_in_as(@user)
+    get edit_user_path(@user)
+    assert_not flash.empty?
+    assert_equal "You can only edit your profile within 24 hours of account creation.", flash[:danger]
+    assert_redirected_to root_url
+  end
+
+  test "should allow the user to edit profile within 24 hours of account creation" do
+    @user.update(created_at: 1.hour.ago)
+    log_in_as(@user)
+    get edit_user_path(@user)
+    assert flash.empty?
+    assert_response :success
+  end
+
   test "should redirect update when logged in as wrong user" do
     log_in_as(@other_user)
     patch user_path(@user), params: { user: { name: @user.name,
