@@ -116,13 +116,18 @@ class User < ApplicationRecord
 
   # Generate a cache key for a user's microposts feed
   def microposts_cache_key(page_number: 1, page_size: 30)
-    latest_post = microposts.order(created_at: :desc).first
-    timestamp = latest_post&.created_at&.to_i || 0
-    key = "User/#{id}/Microposts/#{timestamp}/#{page_number}_#{page_size}_v1"
+    latest_post_timestamp = microposts.order(created_at: :desc).first&.created_at&.to_i || 0
+    latest_followed_post_timestamp = latest_followed_micropost_timestamp
+    combined_timestamp = [latest_post_timestamp, latest_followed_post_timestamp].max
+    key = "User/#{id}/Microposts/#{combined_timestamp}/#{page_number}_#{page_size}_v2"
     Rails.logger.info "Generated microposts cache key: #{key}"
     key
   end
 
+  # Find the latest micropost timestamp from followed users
+  def latest_followed_micropost_timestamp
+    Micropost.where(user_id: following_ids).order(created_at: :desc).first&.created_at&.to_i || 0
+  end
 
   private
 
