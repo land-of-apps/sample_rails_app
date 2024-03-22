@@ -1,0 +1,29 @@
+Can you explain to me how i can fix the problem where current_user is being called repeatedly and causing duplicate queries to the database? Recommend a code fix to the appropriate function. 
+
+Can you identify why I'm seeing repeated calls to my database for the same query.  Identify the offending function and provide an updated version of the code which reduces unnecessary DB queries.
+
+I am seeing excessive DB calls when users open the / endpoint in production.  Can you identify the source file and function of the database queries and provide a suggested code change fix to the offending code and reduce unnecessary database queries?
+
+I'm seeing excessive database calls when users access the / endpoint in production. My logs show the same DB query hitting the database repeatedly. Can you identify the function that is the source of the repeated queries and suggest a code change to reduce database load.
+
+When users view the home page and render the shared feed view in production we see repeated DB queries and the users experience slow performance. Can you identify the files or functions that are the most likely offender and provide a code solution.
+
+
+---
+
+design a cache key for user microposts
+
+where can i find the User model's method that fetches microposts
+
+Given this code in my User model how would i implement the cache key
+
+in your example what should params be set to? I don't have a params in my existing User model.
+
+How do I confirm if my newly added cache key in the user model feed is set properly and is working propertly in the app.
+
+How would i create a test using ActiveSupport::TestCase to validate my cache key implementation
+
+Where would I add a log line to show the cache usage for my cache key implementation
+
+write me a pull request title and description for my implementation of the new cache key
+
