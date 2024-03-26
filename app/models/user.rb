@@ -85,12 +85,18 @@ class User < ApplicationRecord
   end
 
   # Returns a user's status feed.
-  def feed
-    following_ids = "SELECT followed_id FROM relationships
-                     WHERE  follower_id = :user_id"
-    Micropost.where("user_id IN (#{following_ids})
-                     OR user_id = :user_id", user_id: id)
-             .includes(:user, image_attachment: :blob)
+  # app/models/user.rb
+  def feed(page_number: 1, page_size: 30)
+    key = microposts_cache_key(page_number: page_number, page_size: page_size)
+    Rails.cache.fetch(key) do
+      Rails.logger.info "Cache miss for key: #{key} - Generating microposts feed"
+      following_ids = "SELECT followed_id FROM relationships WHERE follower_id = :user_id"
+      
+      Micropost.where("user_id IN (#{following_ids}) OR user_id = :user_id", user_id: id)
+              .includes(:user, image_attachment: :blob).tap do
+        Rails.logger.info "Cached microposts feed for key: #{key}"
+      end
+    end
   end
 
   # Follows a user.
@@ -106,6 +112,21 @@ class User < ApplicationRecord
   # Returns true if the current user is following the other user.
   def following?(other_user)
     following.include?(other_user)
+  end
+
+  # Generate a cache key for a user's microposts feed
+  def microposts_cache_key(page_number: 1, page_size: 30)
+    latest_post_timestamp = microposts.order(created_at: :desc).first&.created_at&.to_i || 0
+    latest_followed_post_timestamp = latest_followed_micropost_timestamp
+    combined_timestamp = [latest_post_timestamp, latest_followed_post_timestamp].max
+    key = "User/#{id}/Microposts/#{combined_timestamp}/#{page_number}_#{page_size}_v2"
+    Rails.logger.info "Generated microposts cache key: #{key}"
+    key
+  end
+
+  # Find the latest micropost timestamp from followed users
+  def latest_followed_micropost_timestamp
+    Micropost.where(user_id: following_ids).order(created_at: :desc).first&.created_at&.to_i || 0
   end
 
   private

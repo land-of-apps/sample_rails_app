@@ -91,6 +91,38 @@ class UserTest < ActiveSupport::TestCase
     assert_not michael.following?(michael)
   end
 
+  test "cache key changes when new micropost is added" do
+    @user.save
+    initial_key = @user.microposts_cache_key
+    @user.microposts.create!(content: "Another post")
+    assert_not_equal initial_key, @user.microposts_cache_key
+  end
+
+  test "cache key remains same with same conditions" do
+    @user.save
+    initial_key = @user.microposts_cache_key
+    assert_equal initial_key, @user.microposts_cache_key(page_number: 1, page_size: 30)
+  end
+
+  test "cache key varies with different pagination parameters" do
+    @user.save
+    key_page_1 = @user.microposts_cache_key(page_number: 1, page_size: 30)
+    key_page_2 = @user.microposts_cache_key(page_number: 2, page_size: 30)
+    assert_not_equal key_page_1, key_page_2
+  end
+
+  test "microposts cache key changes when followed user posts a new micropost" do
+    @user.save
+    @followed_user = users(:michael)
+    @user.follow(@followed_user)
+    initial_cache_key = @user.microposts_cache_key
+    assert_difference '@followed_user.microposts.count', 1 do
+      @followed_user.microposts.create!(content: "A new post")
+    end
+    new_cache_key = @user.microposts_cache_key
+    assert_not_equal initial_cache_key, new_cache_key, "Cache key did not change"
+  end
+
   test "feed should have the right posts" do
     michael = users(:michael)
     archer  = users(:archer)
