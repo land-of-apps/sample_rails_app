@@ -11,6 +11,9 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @microposts = @user.microposts.paginate(page: params[:page])
+
+    microposts_max_updated_at = @user.microposts.maximum(:updated_at)&.utc&.strftime('%Y%m%d%H%M%S%N') || "0"
+    @microposts_cache_key = "user_microposts_#{@user.id}_#{microposts_max_updated_at}_#{@microposts.total_entries}"
   end
 
   def new
