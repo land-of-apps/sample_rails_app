@@ -107,6 +107,7 @@ GEM
     bootstrap-will_paginate (1.0.0)
       will_paginate
     builder (3.2.4)
+    byebug (11.1.3)
     capybara (3.37.1)
       addressable
       matrix
@@ -196,6 +197,8 @@ GEM
       net-protocol
     nio4r (2.5.8)
     nokogiri (1.14.0-arm64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.14.0-x86_64-darwin)
       racc (~> 1.4)
     nokogiri (1.14.0-x86_64-linux)
       racc (~> 1.4)
@@ -310,6 +313,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-21
+  x86_64-darwin-21
   x86_64-linux
 
 DEPENDENCIES
@@ -320,6 +324,7 @@ DEPENDENCIES
   bootsnap (= 1.12.0)
   bootstrap-sass (= 3.4.1)
   bootstrap-will_paginate (= 1.0.0)
+  byebug (~> 11.1)
   capybara (= 3.37.1)
   debug (= 1.5.0)
   faker (= 2.21.0)
