@@ -18,6 +18,7 @@ class User < ApplicationRecord
                     uniqueness: true
   has_secure_password
   validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
+  before_create :set_stripe_customer_id, if: :new_record?
 
   # Returns the hash digest of the given string.
   def User.digest(string)
@@ -108,6 +109,11 @@ class User < ApplicationRecord
     following.include?(other_user)
   end
 
+  def create_stripe_customer
+    customer = Stripe::Customer.create(email: email)
+    self.update(stripe_customer_id: customer.id)
+  end
+
   private
 
     # Converts email to all lowercase.
@@ -119,5 +125,14 @@ class User < ApplicationRecord
     def create_activation_digest
       self.activation_token  = User.new_token
       self.activation_digest = User.digest(activation_token)
+    end
+
+    def set_stripe_customer_id
+    self.stripe_customer_id ||= create_stripe_customer(self.email)
+    end
+
+    def create_stripe_customer(email)
+      customer = Stripe::Customer.create(email: email)
+      customer.id
     end
 end

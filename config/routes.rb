@@ -18,5 +18,15 @@ Rails.application.routes.draw do
   resources :relationships,       only: [:create, :destroy]
   resource :settings, only: [:show, :edit, :update]
 
+  resource :payments, only: [] do
+    collection do
+      post 'create_session'
+      get 'success'
+      get 'cancel'
+      post 'cancel_subscription'
+      get 'subscription_status'
+    end
+  end
+
   get '/microposts', to: 'static_pages#home'
 end

@@ -20,6 +20,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
+      @user.update(stripe_customer_id: create_stripe_customer(@user.email))
       @user.send_activation_email
       flash[:info] = "Please check your email to activate your account."
       redirect_to root_url
@@ -66,7 +67,7 @@ class UsersController < ApplicationController
 
     def user_params
       params.require(:user).permit(:name, :email, :password,
-                                   :password_confirmation)
+                                   :password_confirmation, :stripe_customer_id)
     end
 
     # Before filters
@@ -81,4 +82,9 @@ class UsersController < ApplicationController
     def admin_user
       redirect_to(root_url, status: :see_other) unless current_user.admin?
     end
+
+    def create_stripe_customer(email)
+    customer = Stripe::Customer.create(email: email)
+    customer.id
+  end
 end

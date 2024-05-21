@@ -6,4 +6,11 @@
 <!-- Add sections for current settings -->
 <p><strong>Name:</strong> <%= current_user.name %></p>
 <p><strong>Email:</strong> <%= current_user.email %></p>
-<p><strong>Stripe Payment Key:</strong> <%= current_user.stripe_payment_key %></p>
+<% if @subscription_active %>
+  <p>Your subscription is currently active.</p>
+  <%= button_to "Cancel Subscription", cancel_subscription_payments_path, method: :post %>
+<% else %>
+  <p><%= flash[:warning] %></p>
+  <p>You are not subscribed to the Premium Service.</p>
+  <%= button_to "Pay $10 for Premium Service", create_session_payments_path %>
+<% end %>

@@ -21,9 +21,11 @@ gem "stimulus-rails",             "1.0.4"
 gem "jbuilder",                   "2.11.5"
 gem "puma",                       "5.6.4"
 gem "bootsnap",                   "1.12.0", require: false
+gem "stripe",                     "~> 11.4"
+
 
 group :development, :test do
-  gem "sqlite3", "1.4.2"
+  gem "sqlite3", "1.5.0"
   gem "debug",   "1.5.0", platforms: %i[ mri mingw x64_mingw ]
 end
 
