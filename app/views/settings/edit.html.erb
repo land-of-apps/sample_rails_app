@@ -1,0 +1,29 @@
+<h1>Edit User Settings</h1>
+<%= form_with(model: @user, url: settings_path, local: true, method: :patch) do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <ul>
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :email %>
+    <%= f.email_field :email, class: 'form-control' %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :stripe_payment_key %>
+    <%= f.text_field :stripe_payment_key, class: 'form-control' %>
+  </div>
+
+  <%= f.submit "Save changes", class: "btn btn-primary" %>
+<% end %>

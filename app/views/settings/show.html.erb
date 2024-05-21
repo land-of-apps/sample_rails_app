@@ -1,0 +1,9 @@
+<!-- app/views/settings/show.html.erb -->
+
+<h1>User Settings</h1>
+<%= link_to 'Edit Settings', edit_settings_path %>
+
+<!-- Add sections for current settings -->
+<p><strong>Name:</strong> <%= current_user.name %></p>
+<p><strong>Email:</strong> <%= current_user.email %></p>
+<p><strong>Stripe Payment Key:</strong> <%= current_user.stripe_payment_key %></p>
