@@ -36,22 +36,34 @@
       <p>You are on the paid tier.</p>
     <% else %>
       <p>You are on the free tier.</p>
-      <button id="checkout-button" class="btn btn-primary">Upgrade to Paid Tier</button>
+      <%= button_to "Upgrade to Paid Tier", get_stripe_session_path, method: :post, id: "checkout-button" %>
     <% end %>
   </div>
 </div>
 
-<%= javascript_include_tag 'https://js.stripe.com/v3/' %>
-<script type="text/javascript">
-  var stripe = Stripe('<%= Rails.configuration.stripe[:publishable_key] %>');
-
-  document.getElementById("checkout-button").addEventListener("click", function () {
-    stripe.redirectToCheckout({
-      sessionId: '<%= @stripe_session.id %>'
-    }).then(function (result) {
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  document.getElementById('checkout-button').addEventListener('click', function(event) {
+    event.preventDefault();
+    fetch('/get_stripe_session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': '<%= form_authenticity_token %>'
+      },
+    body: JSON.stringify({ user_id: <%= @user.id %> })
+    })
+    .then(response => response.json())
+    .then(session => {
+      return Stripe('<%= Rails.configuration.stripe[:publishable_key] %>').redirectToCheckout({ sessionId: session.id });
+    })
+    .then(result => {
       if (result.error) {
         alert(result.error.message);
       }
+    })
+    .catch(error => {
+      console.error('Error:', error);
     });
   });
 </script>

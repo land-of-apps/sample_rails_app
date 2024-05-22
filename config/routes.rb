@@ -18,4 +18,5 @@ Rails.application.routes.draw do
   resources :relationships,       only: [:create, :destroy]
   get '/microposts', to: 'static_pages#home'
   post '/webhook/stripe', to: 'webhooks#stripe'
+  post 'get_stripe_session', to: 'users#get_stripe_session'
 end

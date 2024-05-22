@@ -30,17 +30,11 @@ class UsersController < ApplicationController
 
   def edit
     @user = User.find(params[:id])
-    @stripe_session = create_stripe_session(@user)
-    unless @stripe_session
-      flash[:error] = "Error creating Stripe session, please try again."
-      redirect_to edit_user_path(@user)
-    end
   end
 
 
   def update
     @user = User.find(params[:id])
-    @stripe_session = create_stripe_session(@user)
     if @user.update(user_params)
       flash[:success] = "Profile updated"
       redirect_to @user
@@ -69,30 +63,41 @@ class UsersController < ApplicationController
     render 'show_follow', status: :unprocessable_entity
   end
 
-  private
-
-    def create_stripe_session(user)
-      Stripe::Checkout::Session.create(
-        payment_method_types: ['card'],
-        customer_email: user.email,
-        line_items: [{
-          price_data: {
-            currency: 'usd',
-            product_data: {
-              name: 'Pro Membership',
-            },
-            unit_amount: 1000,
-          },
-          quantity: 1,
-        }],
-        mode: 'payment',
-        success_url: edit_user_url(user),
-        cancel_url: edit_user_url(user),
-        metadata: {
-          user_id: user.id
-        }
-      )
+  def get_stripe_session
+    user = User.find_by(id: params[:user_id])
+    if user
+      stripe_session = create_stripe_session(user)
+      render json: { id: stripe_session.id }
+    else
+      render status: 404, json: { error: "User not found" }
     end
+  end
+
+
+  def create_stripe_session(user)
+    Stripe::Checkout::Session.create(
+      payment_method_types: ['card'],
+      customer_email: user.email,
+      line_items: [{
+        price_data: {
+          currency: 'usd',
+          product_data: {
+            name: 'Pro Membership',
+          },
+          unit_amount: 1000,
+        },
+        quantity: 1,
+      }],
+      mode: 'payment',
+      success_url: edit_user_url(user),
+      cancel_url: edit_user_url(user),
+      metadata: {
+        user_id: user.id
+      }
+    )
+  end
+
+  private
 
     def user_params
       params.require(:user).permit(:name, :email, :password,
