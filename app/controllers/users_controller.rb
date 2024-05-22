@@ -68,6 +68,7 @@ class UsersController < ApplicationController
     def create_stripe_session(user)
       Stripe::Checkout::Session.create(
         payment_method_types: ['card'],
+        customer_email: user.email,
         line_items: [{
           price_data: {
             currency: 'usd',
@@ -79,7 +80,7 @@ class UsersController < ApplicationController
           quantity: 1,
         }],
         mode: 'payment',
-        success_url: root_url,
+        success_url: edit_user_url(user),
         cancel_url: edit_user_url(user),
       )
     end
