@@ -31,10 +31,16 @@ class UsersController < ApplicationController
   def edit
     @user = User.find(params[:id])
     @stripe_session = create_stripe_session(@user)
+    unless @stripe_session
+      flash[:error] = "Error creating Stripe session, please try again."
+      redirect_to edit_user_path(@user)
+    end
   end
+
 
   def update
     @user = User.find(params[:id])
+    @stripe_session = create_stripe_session(@user)
     if @user.update(user_params)
       flash[:success] = "Profile updated"
       redirect_to @user
@@ -82,6 +88,9 @@ class UsersController < ApplicationController
         mode: 'payment',
         success_url: edit_user_url(user),
         cancel_url: edit_user_url(user),
+        metadata: {
+          user_id: user.id
+        }
       )
     end
 
