@@ -20,10 +20,38 @@
 
       <%= f.submit "Save changes", class: "btn btn-primary" %>
     <% end %>
-
+    <hr>
     <div class="gravatar_edit">
       <%= gravatar_for @user %>
       <a href="https://gravatar.com/emails" target="_blank">change</a>
     </div>
+
+    
+
+    <br>
+    <br>
+    <br>
+    <hr>
+    <% if @user.paid? %>
+      <p>You are on the paid tier.</p>
+    <% else %>
+      <p>You are on the free tier.</p>
+      <button id="checkout-button" class="btn btn-primary">Upgrade to Paid Tier</button>
+    <% end %>
   </div>
 </div>
+
+<%= javascript_include_tag 'https://js.stripe.com/v3/' %>
+<script type="text/javascript">
+  var stripe = Stripe('<%= Rails.configuration.stripe[:publishable_key] %>');
+
+  document.getElementById("checkout-button").addEventListener("click", function () {
+    stripe.redirectToCheckout({
+      sessionId: '<%= @stripe_session.id %>'
+    }).then(function (result) {
+      if (result.error) {
+        alert(result.error.message);
+      }
+    });
+  });
+</script>

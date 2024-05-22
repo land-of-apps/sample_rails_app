@@ -30,6 +30,7 @@ class UsersController < ApplicationController
 
   def edit
     @user = User.find(params[:id])
+    @stripe_session = create_stripe_session(@user)
   end
 
   def update
@@ -63,6 +64,25 @@ class UsersController < ApplicationController
   end
 
   private
+
+    def create_stripe_session(user)
+      Stripe::Checkout::Session.create(
+        payment_method_types: ['card'],
+        line_items: [{
+          price_data: {
+            currency: 'usd',
+            product_data: {
+              name: 'Pro Membership',
+            },
+            unit_amount: 1000,
+          },
+          quantity: 1,
+        }],
+        mode: 'payment',
+        success_url: root_url,
+        cancel_url: edit_user_url(user),
+      )
+    end
 
     def user_params
       params.require(:user).permit(:name, :email, :password,
