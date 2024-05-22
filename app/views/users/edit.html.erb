@@ -20,10 +20,50 @@
 
       <%= f.submit "Save changes", class: "btn btn-primary" %>
     <% end %>
-
+    <hr>
     <div class="gravatar_edit">
       <%= gravatar_for @user %>
       <a href="https://gravatar.com/emails" target="_blank">change</a>
     </div>
+
+    
+
+    <br>
+    <br>
+    <br>
+    <hr>
+    <% if @user.paid? %>
+      <p>You are on the paid tier.</p>
+    <% else %>
+      <p>You are on the free tier.</p>
+      <%= button_to "Upgrade to Paid Tier", get_stripe_session_path, method: :post, id: "checkout-button" %>
+    <% end %>
   </div>
 </div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  document.getElementById('checkout-button').addEventListener('click', function(event) {
+    event.preventDefault();
+    fetch('/get_stripe_session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': '<%= form_authenticity_token %>'
+      },
+    body: JSON.stringify({ user_id: <%= @user.id %> })
+    })
+    .then(response => response.json())
+    .then(session => {
+      return Stripe('<%= Rails.configuration.stripe[:publishable_key] %>').redirectToCheckout({ sessionId: session.id });
+    })
+    .then(result => {
+      if (result.error) {
+        alert(result.error.message);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  });
+</script>
