@@ -112,4 +112,10 @@ class UserTest < ActiveSupport::TestCase
       assert_not michael.feed.include?(post_unfollowed)
     end
   end
+
+  test "assign stripe customer on user creation" do
+    user = User.new(name: "Example User", email: "user@example.com", password: "password", password_confirmation: "password")
+    user.save
+    assert_not_nil user.stripe_customer_id
+  end
 end
