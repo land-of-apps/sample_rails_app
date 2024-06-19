@@ -1,0 +1,33 @@
+<%= form_with(model: @billing_address, url: billing_address_path, local: true) do |form| %>
+  <div class="field">
+    <%= form.label :line1 %>
+    <%= form.text_field :line1 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :line2 %>
+    <%= form.text_field :line2 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :city %>
+    <%= form.text_field :city %>
+  </div>
+
+  <div class="field">
+    <%= form.label :state %>
+    <%= form.text_field :state %>
+  </div>
+
+  <div class="field">
+    <%= form.label :zip %>
+    <%= form.text_field :zip %>
+  </div>
+
+  <div class="field">
+    <%= form.label :country %>
+    <%= form.text_field :country %>
+  </div>
+
+  <%= form.submit "Save" %>
+<% end %>

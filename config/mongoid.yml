@@ -1,0 +1,17 @@
+development:
+  clients:
+    default:
+      database: sample_app_development
+      hosts:
+        - localhost:27017
+      options:
+  options:
+    raise_not_found_error: false
+
+test:
+  options:
+    raise_not_found_error: false
+
+production:
+  options:
+    raise_not_found_error: false

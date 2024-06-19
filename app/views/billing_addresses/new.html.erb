@@ -1,0 +1,21 @@
+<%= form_with(model: @billing_address, url: new_billing_address_path, local: true) do |form| %>
+  <%= form.label :line1, 'Address Line 1' %>
+  <%= form.text_field :line1, class: 'form-control' %>
+
+  <%= form.label :line2, 'Address Line 2' %>
+  <%= form.text_field :line2, class: 'form-control' %>
+
+  <%= form.label :city, 'City' %>
+  <%= form.text_field :city, class: 'form-control' %>
+
+  <%= form.label :state, 'State' %>
+  <%= form.text_field :state, class: 'form-control' %>
+
+  <%= form.label :zip, 'Zip Code' %>
+  <%= form.text_field :zip, class: 'form-control' %>
+
+  <%= form.label :country, 'Country' %>
+  <%= form.text_field :parent, class: 'form-control' %>
+
+  <%= form.submit 'Save Address', class: 'btn btn-primary' %>
+<% end %>
