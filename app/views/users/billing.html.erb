@@ -1,0 +1,23 @@
+<% provide(:title, "Billing") %>
+<h1>Manage Billing Settings</h1>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_with(url: billing_user_path(@user), local: true, method: :patch) do |f| %>
+
+      <%= f.label :address %>
+      <%= f.text_field :address, value: @billing_address.address, class: 'form-control' %>
+
+      <%= f.label :city %>
+      <%= f.text_field :city, value: @billing_address.city, class: 'form-control' %>
+
+      <%= f.label :state %>
+      <%= f.text_field :state, value: @billing_address.state, class: 'form-control' %>
+
+      <%= f.label :zip_code %>
+      <%= f.text_field :zip_code, value: @billing_address.zip_code, class: 'form-control' %>
+
+      <%= f.submit "Save Billing Info", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>

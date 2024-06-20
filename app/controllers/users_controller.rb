@@ -62,8 +62,27 @@ class UsersController < ApplicationController
     render 'show_follow', status: :unprocessable_entity
   end
 
-  private
+  def billing
+    @user = User.find(params[:id])
+    @billing_address = UserBilling.find_or_initialize_by(user_id: @user.id)
+  end
 
+  def update_billing
+    @user = User.find(params[:id])
+    @billing_address = UserBilling.find_or_initialize_by(user_id: @user.id)
+    if @billing_address.update(billing_params)
+      flash[:success] = "Billing address updated"
+      redirect_to billing_user_path(@user)
+    else
+      render 'billing', status: :unprocessable_entity
+    end
+  end
+
+  private
+    def billing_params
+      params.require(:billing).permit(:address, :city, :state, :zip_code)
+    end
+    
     def user_params
       params.require(:user).permit(:name, :email, :password,
                                    :password_confirmation)
