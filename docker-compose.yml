@@ -7,3 +7,10 @@ services:
       - "3000:3000"
     volumes:
       - ./tmp/appmap:/app/tmp/appmap
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./tmp/mongodb:/data/db
