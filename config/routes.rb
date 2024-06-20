@@ -11,7 +11,7 @@ Rails.application.routes.draw do
     member do
       get :following, :followers
       get :billing
-      patch :billing
+      patch 'billing', to: 'users#update_billing'
     end
   end
   resources :account_activations, only: [:edit]
