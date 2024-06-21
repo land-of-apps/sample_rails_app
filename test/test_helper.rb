@@ -2,11 +2,7 @@ ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
 require "minitest/reporters"
-require 'database_cleaner/mongoid'
 Minitest::Reporters.use!
-
-DatabaseCleaner.allow_production = false
-DatabaseCleaner.allow_remote_database_url = false
 
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers

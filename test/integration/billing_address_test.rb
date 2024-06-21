@@ -4,17 +4,12 @@ class BillingAddressTest < ActionDispatch::IntegrationTest
   def setup
     @michael = users(:michael)
     @archer = users(:archer)
-    DatabaseCleaner.strategy = :deletion
-    DatabaseCleaner.start
+    Mongoid.raise_not_found_error = false
   end
 
-  teardown do
-    DatabaseCleaner.clean_with(:deletion)
-    DatabaseCleaner.clean
-  end
-
-  test "create new billing address as michael" do
+  test "create new billing address" do
     user = @michael
+    UserBilling.find_by(user_id: user.id)&.destroy
     get billing_user_path(user)
     assert_template 'users/billing'
 
@@ -32,9 +27,9 @@ class BillingAddressTest < ActionDispatch::IntegrationTest
     assert_equal "12345", user_billing.zip_code
   end
 
-  test "update existing billing address as archer" do
+  test "update existing billing address" do
     user = @archer
-    # Ensure a billing address exists before this test
+    UserBilling.find_by(user_id: user.id)&.destroy
     UserBilling.create(user_id: user.id, address: "Initial Address", city: "Initial City", state: "Initial State", zip_code: "00000")
 
     get billing_user_path(user)
