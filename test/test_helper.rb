@@ -2,6 +2,7 @@ ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
 require "minitest/reporters"
+require 'database_cleaner/mongoid'
 Minitest::Reporters.use!
 
 class ActiveSupport::TestCase
@@ -25,5 +26,15 @@ class ActionDispatch::IntegrationTest
     post login_path, params: { session: { email: user.email,
                                           password: password,
                                           remember_me: remember_me } }
+  end
+
+  DatabaseCleaner.strategy = :deletion
+  
+  setup do
+    DatabaseCleaner.start
+  end
+  
+  teardown do
+    DatabaseCleaner.clean
   end
 end
