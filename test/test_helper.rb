@@ -5,6 +5,9 @@ require "minitest/reporters"
 require 'database_cleaner/mongoid'
 Minitest::Reporters.use!
 
+DatabaseCleaner.allow_production = false
+DatabaseCleaner.allow_remote_database_url = false
+
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors)
@@ -26,15 +29,5 @@ class ActionDispatch::IntegrationTest
     post login_path, params: { session: { email: user.email,
                                           password: password,
                                           remember_me: remember_me } }
-  end
-
-  DatabaseCleaner.strategy = :deletion
-  
-  setup do
-    DatabaseCleaner.start
-  end
-  
-  teardown do
-    DatabaseCleaner.clean
   end
 end
