@@ -1,0 +1,25 @@
+# config/mongoid.yml
+development:
+  clients:
+    default:
+      database: sample_rails_app_dev
+      hosts:
+        - localhost:27017
+      options:
+        server_selection_timeout: 5
+test:
+  clients:
+    default:
+      database: sample_rails_app_test
+      hosts:
+        - localhost:27017
+      options:
+        server_selection_timeout: 5
+production:
+  clients:
+    default:
+      database: sample_rails_app
+      hosts:
+        - localhost:27017
+      options:
+        server_selection_timeout: 5

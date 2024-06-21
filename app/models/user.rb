@@ -38,6 +38,10 @@ class User < ApplicationRecord
     remember_digest
   end
 
+  def billing_address
+    UserBilling.find_by(user_id: self.id)
+  end
+
   # Returns a session token to prevent session hijacking.
   # We reuse the remember digest for convenience.
   def session_token
