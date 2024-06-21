@@ -24,7 +24,7 @@ jobs:
           bundler-cache: true
 
       - name: Run tests
-        run: PARALLEL_WORKERS=1 bundle exec rails test
+        run: bundle exec rails test
 
       - name: Save AppMaps
         uses: actions/cache/save@v3
