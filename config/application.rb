@@ -6,17 +6,16 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module SampleApp
+require 'opentelemetry/instrumentation/rails'
+require 'opentelemetry/instrumentation/active_record'
+
+module SampleRailsApp
   class Application < Rails::Application
-    # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
 
-    # Configuration for the application, engines, and railties goes here.
-    #
-    # These settings can be overridden in specific environments using the files
-    # in config/environments, which are processed later.
-    #
-    # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")
+    # Enable OpenTelemetry instrumentation
+    OpenTelemetry::Instrumentation::Rails::Instrumentation.instance.install(config: { request_hooks: [] })
+    OpenTelemetry::Instrumentation::ActiveRecord::Instrumentation.instance.install
+    OpenTelemetry::Instrumentation::Net::HTTP::Instrumentation.instance.install
   end
 end
