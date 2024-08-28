@@ -14,7 +14,7 @@ module SampleRailsApp
     config.load_defaults 7.0
 
     # Enable OpenTelemetry instrumentation
-    OpenTelemetry::Instrumentation::Rails::Instrumentation.instance.install(config: { request_hooks: [] })
+    OpenTelemetry::Instrumentation::Rails::Instrumentation.instance.install
     OpenTelemetry::Instrumentation::ActiveRecord::Instrumentation.instance.install
     OpenTelemetry::Instrumentation::Net::HTTP::Instrumentation.instance.install
   end
