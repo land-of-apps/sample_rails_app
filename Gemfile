@@ -21,6 +21,10 @@ gem "stimulus-rails",             "1.0.4"
 gem "jbuilder",                   "2.11.5"
 gem "puma",                       "5.6.4"
 gem "bootsnap",                   "1.12.0", require: false
+gem "opentelemetry-instrumentation-all", "0.63.0"
+gem "opentelemetry-instrumentation-net_http", "0.22.7"
+gem "opentelemetry-sdk", "1.5.0"
+gem "opentelemetry-exporter-otlp", "0.28.1"
 
 group :development, :test do
   gem "sqlite3", "1.5.0"
