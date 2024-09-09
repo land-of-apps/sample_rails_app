@@ -1,0 +1,51 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+
+exporters:
+  debug:
+    verbosity: detailed
+  file/rotated_logs:
+    path: /project/tmp/otel_logs
+    rotation:
+      max_megabytes: 10
+      max_days: 14
+      max_backups: 500
+      localtime: false # Use UTC
+    format: json
+    flush_interval: 5s
+  file/rotated_metrics:
+    path: /project/tmp/otel_metrics
+    rotation:
+      max_megabytes: 10
+      max_days: 14
+      max_backups: 500
+      localtime: false # Use UTC
+    format: json
+    flush_interval: 5s
+  file/rotated_traces:
+    path: /project/tmp/otel_traces
+    rotation:
+      max_megabytes: 10
+      max_days: 14
+      max_backups: 500
+      localtime: false # Use UTC
+    format: json
+    flush_interval: 5s
+
+service:
+  pipelines:
+    logs:
+      receivers: [otlp]
+      processors: []
+      exporters: [debug, file/rotated_logs]
+    metrics:
+      receivers: [otlp]
+      processors: []
+      exporters: [debug, file/rotated_metrics]
+    traces:
+      receivers: [otlp]
+      processors: []
+      exporters: [debug, file/rotated_traces]

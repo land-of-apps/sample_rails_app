@@ -1,6 +1,6 @@
 # After getting the rails application setup and working do the following to get OTEL output
 
-#Open Docker Desktop
+## Open Docker Desktop
 docker run -d --name jaeger \
   -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \
   -e COLLECTOR_OTLP_ENABLED=true \
@@ -20,12 +20,32 @@ bundle install
 
 env OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4318" bundle exec rails server -p 8080
 
-# Open the rails app
+## Open the rails app
 open http://127.0.0.1:8080
 
-# Navigate around the applciation to generate some traces
+## Navigate around the applciation to generate some traces
 
-# Open the Jaeger UI
+## Open the Jaeger UI
 open http://localhost:16686
 
 Search for the service name "SampleRailsApp" and you should see traces being generated.
+
+# To get spans into files
+
+docker pull otel/opentelemetry-collector:latest
+
+docker run \
+  -v $(pwd)/otel-collector-config.yaml:/otel-config.yaml \
+  -p 4317:4317 \
+  -p 4318:4318 \
+  -p 55679:55679 \
+  -v .:/project \
+  otel/opentelemetry-collector:latest \
+  --config /otel-config.yaml
+
+
+OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4318" \
+OTEL_LOGS_EXPORTER="otlp" \
+OTEL_EXPORTER_OTLP_LOGS_ENDPOINT="http://localhost:4318" \
+OTEL_RESOURCE_ATTRIBUTES="service.name=sample_rails_app" \
+bundle exec rails server -p 8080
